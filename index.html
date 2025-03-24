@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Code Editor</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/codemirror.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/codemirror.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/mode/javascript/javascript.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/mode/python/python.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/mode/htmlmixed/htmlmixed.min.js"></script>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; }
+        .editor-container { width: 80%; margin: 20px auto; }
+        textarea { display: none; }
+        button { margin-top: 10px; padding: 10px; }
+    </style>
+</head>
+<body>
+    <h1>AI Code Editor</h1>
+    <div class="editor-container">
+        <textarea id="code"></textarea>
+        <button onclick="saveCode()">Save Code</button>
+        <button onclick="loadCode()">Load Code</button>
+    </div>
+    <script>
+        var editor = CodeMirror.fromTextArea(document.getElementById("code"), {
+            mode: "javascript",
+            lineNumbers: true,
+            theme: "default"
+        });
+
+        function saveCode() {
+            const code = editor.getValue();
+            fetch('https://ai-code-backend.vercel.app/save', {  // Update with your Vercel backend URL
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ code })
+            });
+        }
+
+        function loadCode() {
+            fetch('https://ai-code-backend.vercel.app/load')  // Update with your Vercel backend URL
+                .then(response => response.json())
+                .then(data => editor.setValue(data.code));
+        }
+    </script>
+</body>
+</html>
